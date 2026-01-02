@@ -1,0 +1,22 @@
+{
+  "name": "edgecase-engine-backend",
+  "version": "0.1.0",
+  "description": "Backend for EdgeCase Engine MVP",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "seed": "node src/seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.2",
+    "mongodb": "^7.0.0",
+    "mongoose": "^7.0.0",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
