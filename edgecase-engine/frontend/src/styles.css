@@ -1,0 +1,119 @@
+/* EdgeCase Engine — Futuristic UI: Blue → Purple glass theme */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  /* Core palette */
+  --bg-deep: #08101b; /* deep indigo */
+  --bg-mid: #0f1724;
+  --accent-start: #4ac7ff; /* soft neon blue */
+  --accent-mid: #7a6bff;   /* electric violet */
+  --accent-end: #a46bff;   /* soft purple */
+  --glass-0: rgba(255,255,255,0.025);
+  --glass-1: rgba(255,255,255,0.04);
+  --muted: rgba(200,220,255,0.72);
+  --text: rgba(240,248,255,0.96);
+  --subtle: rgba(255,255,255,0.02);
+  --ui-radius: 14px;
+  --soft-shadow: 0 18px 50px rgba(20,14,60,0.18);
+  --glass-border: rgba(150,130,255,0.06);
+  --speed-fast: 240ms cubic-bezier(.2,.9,.2,1);
+  --speed-slow: 520ms cubic-bezier(.16,.86,.33,1);
+}
+
+html,body,#root{ height:100%; }
+body{
+  margin:0; color:var(--text); font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  background: radial-gradient(1200px 500px at 10% 15%, rgba(74,163,255,0.06), transparent 8%), radial-gradient(1000px 400px at 90% 85%, rgba(166,107,255,0.06), transparent 8%), linear-gradient(180deg, var(--bg-deep), var(--bg-mid));
+  overflow-x:hidden;
+}
+/* keep background fixed so gradients don't appear to reset when scrolling long content */
+body{ background-attachment: fixed; }
+
+/* Ambient animated background layers are provided by Background component, content sits above */
+.app-container{ position:relative; z-index:10; padding:28px; min-height:100vh; max-width:1200px; margin:0 auto; }
+
+/* Glass surfaces */
+.card{ background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02)); border-radius:var(--ui-radius); padding:18px; border:1px solid rgba(150,130,255,0.12); box-shadow: 0 20px 60px rgba(18,14,50,0.12); backdrop-filter: blur(8px) saturate(120%); transition: box-shadow var(--speed-fast), border-color var(--speed-fast); }
+/* remove prominent lift on hover — keep very subtle glow */
+.card:hover{ transform:none; box-shadow: 0 22px 66px rgba(20,14,60,0.14); border-color: rgba(166,107,255,0.10); }
+
+header.app-header{ display:flex; align-items:center; justify-content:space-between; gap:18px; }
+header.app-header h1{ margin:0; font-weight:600; font-size:20px; letter-spacing:0.4px; color:var(--text); filter:drop-shadow(0 4px 18px rgba(90,70,180,0.08)); }
+header.app-header nav a{ color:var(--muted); text-decoration:none; margin-left:12px; font-size:14px; padding:8px 10px; border-radius:10px; transition: color var(--speed-fast), transform var(--speed-fast), box-shadow var(--speed-fast); }
+header.app-header nav a:hover{ color:var(--text); transform:translateY(-3px); box-shadow: 0 8px 30px rgba(80,60,160,0.06); }
+
+.main{ margin-top:26px }
+
+/* Buttons */
+.button{ background:transparent; border:1px solid rgba(160,180,255,0.06); color:var(--muted); padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600; transition: transform var(--speed-fast), box-shadow var(--speed-fast), background var(--speed-fast); }
+.button:hover{ transform: translateY(-3px); }
+.button.primary{ color:white; background: linear-gradient(90deg, var(--accent-start), var(--accent-mid)); box-shadow: 0 18px 64px rgba(74,110,220,0.12); border:1px solid rgba(140,110,255,0.14); }
+.button.ghost{ background:transparent; }
+
+/* Ensure raw button elements adopt the theme (covers inline buttons without class) */
+button{ all:unset; box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600; color:var(--muted); background:transparent; border:1px solid rgba(160,180,255,0.06); transition: box-shadow var(--speed-fast), transform var(--speed-fast); }
+button:hover{ transform:translateY(-3px); }
+button.primary{ background: linear-gradient(90deg, var(--accent-start), var(--accent-mid)); color:white; border:1px solid rgba(140,110,255,0.12); box-shadow: 0 18px 64px rgba(74,110,220,0.10); }
+
+/* Inputs */
+.input, textarea{ background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); border:1px solid rgba(200,210,255,0.04); color:var(--text); padding:10px; border-radius:10px; transition: box-shadow var(--speed-fast), border-color var(--speed-fast); box-sizing: border-box; width:100%; }
+.card input[type="number"]{ width:140px; }
+.input:focus, textarea:focus{ outline:none; border-image-slice:1; border-image-source: linear-gradient(90deg, var(--accent-start), var(--accent-end)); box-shadow: 0 10px 30px rgba(120,80,200,0.06); }
+
+/* Forms and controls — ensure consistent look when inline styles used */
+input, textarea, select{ background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); border:1px solid rgba(200,210,255,0.04); color:var(--text); padding:8px 10px; border-radius:10px; box-sizing:border-box; }
+input::placeholder, textarea::placeholder{ color: rgba(220,230,255,0.45); }
+
+pre, code, .data-text{ font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; color:var(--text); background: rgba(255,255,255,0.01); padding:12px; border-radius:12px; overflow:auto; border:1px solid rgba(255,255,255,0.02); }
+
+.small-muted{ color:var(--muted); font-size:13px }
+
+/* Modal */
+.modal-overlay{ position:fixed; inset:0; background: linear-gradient(180deg, rgba(6,8,12,0.6), rgba(6,8,12,0.6)); display:flex; align-items:center; justify-content:center; z-index:1000 }
+.modal-panel{ width:820px; max-height:86vh; overflow:auto; background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.008)); border:1px solid var(--glass-border); padding:20px; border-radius:16px; backdrop-filter: blur(10px) saturate(120%); transition: transform var(--speed-slow), opacity var(--speed-slow); }
+
+/* Accent underline */
+.accent-underline{ position:relative }
+.accent-underline::after{ content:''; position:absolute; left:0; right:0; bottom:-8px; height:6px; background: linear-gradient(90deg, var(--accent-start), var(--accent-mid), var(--accent-end)); opacity:0.06; border-radius:999px; transition: opacity var(--speed-fast) }
+.accent-underline.active::after{ opacity:0.18 }
+
+/* Utilities */
+.flex{ display:flex }
+.gap-8{ gap:8px }
+.center{ display:flex; align-items:center; justify-content:center }
+
+.toast{ position:fixed; right:22px; bottom:22px; background: linear-gradient(90deg, rgba(12,14,20,0.92), rgba(10,12,16,0.92)); color:var(--text); padding:10px 14px; border-radius:12px; border:1px solid var(--glass-border); box-shadow: 0 18px 50px rgba(20,14,60,0.14) }
+
+/* subtle micro-glow focus */
+:focus{ outline:2px solid rgba(120,80,220,0.06); outline-offset:3px }
+
+/* Background elements (used by Background component) */
+.background-ambient{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.bg-orb{ position:absolute; border-radius:50%; filter: blur(60px); mix-blend-mode:screen; opacity:0.85; transform: translate3d(0,0,0); }
+.orb-1{ width:520px; height:520px; left:-10%; top:-8%; background: radial-gradient(circle at 30% 30%, rgba(74,199,255,0.20), rgba(74,199,255,0.04) 30%, transparent 60%); animation: floatSlow 14s ease-in-out infinite alternate; opacity:0.6 }
+.orb-2{ width:760px; height:760px; right:-18%; bottom:-12%; background: radial-gradient(circle at 60% 40%, rgba(166,107,255,0.16), rgba(166,107,255,0.04) 30%, transparent 60%); animation: floatSlow 20s ease-in-out infinite alternate-reverse; opacity:0.5 }
+.bg-band{ position:absolute; left:-20%; top:40%; width:140%; height:360px; background: linear-gradient(90deg, rgba(74,199,255,0.05), rgba(166,107,255,0.05)); transform: rotate(-6deg); filter: blur(48px) saturate(140%); opacity:0.45; animation: bandShift 18s linear infinite; }
+
+@keyframes floatSlow{ from{ transform: translateY(-10px) translateX(0) } to{ transform: translateY(14px) translateX(18px) } }
+@keyframes bandShift{ 0%{ transform: translateX(-10%) rotate(-6deg) } 50%{ transform: translateX(8%) rotate(-6deg) } 100%{ transform: translateX(-10%) rotate(-6deg) } }
+
+/* small particle dots for ambient motion */
+.bg-dots{ position:absolute; inset:0; background-image: radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 140px 140px; opacity:0.03; animation: dotsDrift 40s linear infinite; }
+@keyframes dotsDrift{ from{ background-position: 0 0 } to{ background-position: 400px 200px } }
+
+/* Responsive tweaks */
+@media (max-width:720px){ .app-container{ padding:18px } header.app-header nav a{ margin-left:8px; padding:6px 8px } .card{ padding:14px } }
+
+/* Landing hero */
+.landing-hero{ min-height: calc(100vh - 140px); display:flex; align-items:center; justify-content:center; text-align:center; flex-direction:column; gap:18px; padding:40px 20px; }
+.landing-hero .hero-card{ max-width:920px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(150,130,255,0.08); padding:40px; border-radius:18px; }
+.landing-hero h2{ margin:0; font-size:28px; line-height:1.15; color:var(--text); font-weight:600; }
+.landing-hero p.lead{ margin:0; color:rgba(220,230,255,0.86); font-size:16px; max-width:760px; margin-top:12px; }
+.hero-cta{ display:flex; gap:12px; justify-content:center; margin-top:18px }
+
+/* Generic centered page wrapper for forms and content */
+.page-center{ display:flex; align-items:center; justify-content:center; padding:36px 20px; }
+.form-card{ max-width:760px; margin:0 auto; padding:28px; }
+
+

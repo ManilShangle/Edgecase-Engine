@@ -46,6 +46,64 @@ app.post('/api/guest', async (req, res)=>{
   }
 });
 
+// POST /api/seed -> create demo sample problems and testcases, return guest_id
+app.post('/api/seed', async (req, res)=>{
+  try {
+    const guest_id = shortid.generate();
+    await Guest.create({ guest_id });
+
+    const samples = [
+      {
+        owner_type: 'guest', owner_id: guest_id,
+        title: 'Array Sum / Prefix Sum Overflow Trap',
+        source: 'Other', difficulty: 'Medium', tags: ['arrays','math','prefix sums'],
+        input_shape: 'single', primary_ds: 'array',
+        constraints: { n_min: 1, n_max: 10, values_min: -1000000000, values_max: 1000000000, allow_negatives: true, allow_duplicates: true },
+        notes: 'Large values cause overflow in 32-bit accumulators.'
+      },
+      {
+        owner_type: 'guest', owner_id: guest_id,
+        title: 'Graph Connectivity Edge Cases',
+        source: 'Codeforces', difficulty: 'Medium', tags: ['graphs','connectivity'],
+        input_shape: 'single', primary_ds: 'graph',
+        constraints: { graph: { directed: false, weighted: false, nodes_max: 8, edges_max: 28 } },
+        notes: 'Disconnected components and single-node graphs.'
+      },
+      {
+        owner_type: 'guest', owner_id: guest_id,
+        title: 'Binary Search Boundary Issues',
+        source: 'AtCoder', difficulty: 'Easy', tags: ['binary search','arrays','sorting'],
+        input_shape: 'single', primary_ds: 'array',
+        constraints: { n_min: 1, n_max: 8, values_min: 0, values_max: 100, sorted_input: true },
+        notes: 'Targets at edges and duplicates.'
+      }
+    ];
+
+    const seeded = [];
+    for (const s of samples) {
+      const p = await Problem.create(s);
+      const generated = generateTestcases(p, { count: 15, seed: 1000 });
+      const docs = generated.map(g => ({
+        problem_id: p._id,
+        owner_type: 'guest', owner_id: guest_id,
+        name: g.template_name,
+        category: g.category,
+        targets: g.targets,
+        template_id: g.template_id,
+        params: g.params,
+        content: g.content
+      }));
+      await Testcase.insertMany(docs);
+      seeded.push({ problem: p, testcases: docs.length });
+    }
+
+    res.json({ guest_id, seeded });
+  } catch (err) {
+    console.error('seed error', err);
+    res.status(500).json({ error: 'failed to seed' });
+  }
+});
+
 // Create problem
 app.post('/api/problems', async (req, res)=>{
   try {

@@ -137,14 +137,90 @@ function generateGraphTemplates(constraints, opts) {
   return templates;
 }
 
+function generateStringTemplates(constraints, opts) {
+  const nmin = constraints.n_min || 1;
+  const nmax = constraints.n_max || Math.max(1, nmin);
+  const templates = [];
+  function mk(name, s, targets){
+    return { id: shortid.generate(), name, template: 'string', targets: targets||[], params: { N: s.length }, content: s };
+  }
+
+  // empty or min length
+  templates.push(mk('Empty / Min', ''.padEnd(nmin, 'a'), ['boundary']));
+  // single char
+  templates.push(mk('Single char', 'a'.repeat(1), ['boundary']));
+  // all same char
+  templates.push(mk('All same char', 'z'.repeat(Math.max(1,nmin)), ['duplicates']));
+  // alternating
+  let alt = '';
+  for (let i=0;i<Math.max(1,nmin);i++) alt += i%2===0 ? 'a' : 'z';
+  templates.push(mk('Alternating chars', alt, ['ordering']));
+  // long run then change
+  templates.push(mk('Long run then change', 'a'.repeat(Math.max(1,nmin-1)) + 'b', ['edge']));
+  // palindrome and almost palindrome
+  const pal = 'abba'.slice(0, Math.max(1,nmin));
+  templates.push(mk('Palindrome', pal, ['parsing']));
+
+  // random-ish deterministic
+  if (!opts.exclude_randomness) {
+    let s = opts.seed || 12345;
+    const len = Math.max(1, Math.min(nmax, Math.floor((nmin + nmax)/2)));
+    let str = '';
+    for (let i=0;i<len;i++) {
+      const r = randInt(s, 97, 122);
+      s = r.seed;
+      str += String.fromCharCode(r.value);
+    }
+    templates.push(mk('Random string', str, ['random']));
+  }
+
+  return templates;
+}
+
+function generateBinarySearchTemplates(constraints, opts) {
+  const nmin = constraints.n_min || 1;
+  const nmax = constraints.n_max || Math.max(1,nmin);
+  const vmin = constraints.values_min != null ? constraints.values_min : 0;
+  const vmax = constraints.values_max != null ? constraints.values_max : Math.max(10, vmin + 10);
+  const templates = [];
+  function mk(name, arr, target, targets){
+    const content = arr.length + '\n' + arr.join(' ') + '\n' + target;
+    return { id: shortid.generate(), name, template: 'binary_search', targets: targets||[], params: { N: arr.length, target }, content };
+  }
+
+  // target at first
+  const small = new Array(Math.max(1,nmin)).fill(0).map((_,i)=> vmin + i);
+  templates.push(mk('Target at first', small, small[0], ['boundary']));
+  // target at last
+  const last = small.slice(); last[small.length-1] = vmax;
+  templates.push(mk('Target at last', last, last[last.length-1], ['boundary']));
+  // not present (smaller)
+  const arr1 = small.slice();
+  templates.push(mk('Not present - smaller', arr1, vmin-1, ['off-by-one']));
+  // not present (larger)
+  const arr2 = small.slice();
+  templates.push(mk('Not present - larger', arr2, vmax+1, ['off-by-one']));
+  // duplicates
+  const dup = new Array(Math.max(1,nmin)).fill(vmin);
+  templates.push(mk('Many duplicates', dup, vmin, ['duplicates']));
+
+  return templates;
+}
+
 function generateTestcases(problem, options) {
   const opts = Object.assign({count: 20, seed: 12345, exclude_randomness: false, mode: 'balanced', include_targets: []}, options || {});
   const constraints = problem.constraints || {};
   const tags = problem.tags || [];
 
   let pool = [];
-  if ((tags || []).includes('graph') || (constraints.graph && Object.keys(constraints.graph).length>0)) {
+  const tagset = (tags||[]).map(t=>t.toLowerCase());
+  if (tagset.includes('graph') || (constraints.graph && Object.keys(constraints.graph).length>0)) {
     pool = generateGraphTemplates(constraints, opts);
+  } else if (tagset.includes('strings') || tagset.includes('string')){
+    pool = generateStringTemplates(constraints, opts);
+  } else if (tagset.includes('binary search') || tagset.includes('binary-search')){
+    // binary search templates assume sorted arrays
+    pool = generateBinarySearchTemplates(constraints, opts);
   } else {
     pool = generateArrayTemplates(constraints, opts);
   }
