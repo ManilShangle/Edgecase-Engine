@@ -7,6 +7,7 @@ const TestcaseSchema = new mongoose.Schema({
   name: { type: String, text: true },
   category: { type: String },
   targets: [String],
+  canonical_key: { type: String, index: true },
   template_id: String,
   params: Object,
   content: { type: String, text: true },

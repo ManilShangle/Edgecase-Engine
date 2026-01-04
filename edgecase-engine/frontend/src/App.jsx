@@ -12,7 +12,8 @@ export default function App(){
           <Link to="/">Home</Link>
           <Link to="/create">Create</Link>
           <Link to="/library">Library</Link>
-          <Link to="/about">About</Link>
+          <Link to="/how-it-works">How It Works</Link>
+          <Link to="/why-it-exists">Why It Exists</Link>
         </nav>
       </header>
       <main className="main">

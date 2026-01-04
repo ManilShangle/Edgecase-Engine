@@ -1,4 +1,4 @@
-# EdgeCase Engine — MVP
+# EdgeCase Engine: MVP
 
 Quick start (backend + frontend locally)
 

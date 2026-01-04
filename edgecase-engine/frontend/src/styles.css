@@ -1,5 +1,5 @@
-/* EdgeCase Engine — Futuristic UI: Blue → Purple glass theme */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+/* EdgeCase Engine: Futuristic UI - Blue → Purple glass theme */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 :root{
   /* Core palette */
@@ -22,7 +22,7 @@
 
 html,body,#root{ height:100%; }
 body{
-  margin:0; color:var(--text); font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  margin:0; color:var(--text); font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
   background: radial-gradient(1200px 500px at 10% 15%, rgba(74,163,255,0.06), transparent 8%), radial-gradient(1000px 400px at 90% 85%, rgba(166,107,255,0.06), transparent 8%), linear-gradient(180deg, var(--bg-deep), var(--bg-mid));
   overflow-x:hidden;
@@ -35,7 +35,7 @@ body{ background-attachment: fixed; }
 
 /* Glass surfaces */
 .card{ background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02)); border-radius:var(--ui-radius); padding:18px; border:1px solid rgba(150,130,255,0.12); box-shadow: 0 20px 60px rgba(18,14,50,0.12); backdrop-filter: blur(8px) saturate(120%); transition: box-shadow var(--speed-fast), border-color var(--speed-fast); }
-/* remove prominent lift on hover — keep very subtle glow */
+/* remove prominent lift on hover - keep very subtle glow */
 .card:hover{ transform:none; box-shadow: 0 22px 66px rgba(20,14,60,0.14); border-color: rgba(166,107,255,0.10); }
 
 header.app-header{ display:flex; align-items:center; justify-content:space-between; gap:18px; }
@@ -61,7 +61,7 @@ button.primary{ background: linear-gradient(90deg, var(--accent-start), var(--ac
 .card input[type="number"]{ width:140px; }
 .input:focus, textarea:focus{ outline:none; border-image-slice:1; border-image-source: linear-gradient(90deg, var(--accent-start), var(--accent-end)); box-shadow: 0 10px 30px rgba(120,80,200,0.06); }
 
-/* Forms and controls — ensure consistent look when inline styles used */
+/* Forms and controls - ensure consistent look when inline styles used */
 input, textarea, select{ background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); border:1px solid rgba(200,210,255,0.04); color:var(--text); padding:8px 10px; border-radius:10px; box-sizing:border-box; }
 input::placeholder, textarea::placeholder{ color: rgba(220,230,255,0.45); }
 
@@ -111,6 +111,85 @@ pre, code, .data-text{ font-family: 'JetBrains Mono', ui-monospace, SFMono-Regul
 .landing-hero h2{ margin:0; font-size:28px; line-height:1.15; color:var(--text); font-weight:600; }
 .landing-hero p.lead{ margin:0; color:rgba(220,230,255,0.86); font-size:16px; max-width:760px; margin-top:12px; }
 .hero-cta{ display:flex; gap:12px; justify-content:center; margin-top:18px }
+
+/* About page adjustments: consistent typography and spacing */
+.about-card{ max-width:880px; padding:28px; line-height:1.45; }
+.about-title{ margin:0 0 10px 0; font-size:20px; line-height:1.25; font-weight:600; }
+.about-lead{ margin:0 0 18px 0; font-size:15px; color:rgba(220,230,255,0.9); }
+.about-heading{ margin-top:18px; margin-bottom:8px; font-size:16px; font-weight:600; }
+.about-subheading{ margin-top:14px; margin-bottom:8px; font-size:15px; font-weight:600; }
+.about-text{ margin:0 0 12px 0; font-size:15px; color:var(--muted); }
+.about-list{ margin:8px 0 12px 20px; font-size:15px; color:var(--muted); }
+.about-ol{ margin:8px 0 12px 20px; font-size:15px; color:var(--muted); }
+.about-cta{ margin-top:18px; text-align:center }
+.about-sep{ margin:22px 0; border-color: rgba(255,255,255,0.04); }
+
+/* Improve legibility of code examples inside About page */
+.about-card code, .about-card pre{ background: rgba(255,255,255,0.02); padding:8px 10px; border-radius:8px; font-size:14px }
+
+@media (max-width:720px){ .about-card{ padding:18px } .about-title{ font-size:18px } }
+/* tighter block separation for developer clarity */
+.about-block{ background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.008)); border:1px solid rgba(255,255,255,0.02); padding:16px; border-radius:12px; margin-bottom:14px }
+.about-what{ font-size:15px; font-weight:600; margin-bottom:8px }
+.about-small{ font-size:13px; color:var(--muted); }
+/* CreateProblem helpers */
+.form-card label{ display:block; margin-top:10px; font-weight:600; }
+.form-card select.input, .form-card input.input, .form-card textarea.input{ font-size:14px }
+
+/* Ensure select controls match the dark theme and their option panels are legible */
+.form-card select.input{
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
+  color: var(--text);
+  border:1px solid rgba(200,210,255,0.04);
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 32px;
+}
+.form-card select.input option{
+  background: linear-gradient(180deg, rgba(12,14,20,0.9), rgba(18,20,28,0.9));
+  color: var(--text);
+  /* Ensure option panels use the dark theme on platforms that allow styling */
+  background-color: rgba(12,14,20,0.95) !important;
+  color: var(--text) !important;
+}
+
+/* Add a subtle dropdown arrow using background-image so the control looks native to the theme */
+.form-card select.input{
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)),
+    radial-gradient(circle at right 14px center, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.0) 40%);
+  background-repeat: no-repeat;
+  background-position: right 12px center, right 12px center;
+  /* Prefer dark UI rendering where supported */
+  color-scheme: dark;
+}
+.form-card .button{ font-size:13px }
+
+/* CreateProblem layout fixes */
+.structure-row{ display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap }
+.structure-row .main-col{ flex:1; min-width:0 }
+.structure-row .size-range-col{ flex:0 0 240px; width:240px }
+
+@media (max-width:720px){
+  .structure-row{ flex-direction:column }
+  .structure-row .size-range-col{ width:100%; flex-basis:auto }
+}
+
+/* Problem type grid: equal columns and capitalized tag buttons */
+.problem-type-grid{ display:flex; gap:16px; justify-content:space-between; margin-top:8px }
+.problem-type-grid > div{ flex:1; min-width:0 }
+.tag-button{ text-transform: capitalize }
+
+/* Prevent overflow and ensure inputs fit their columns */
+.form-card{ box-sizing:border-box; width:100% }
+.form-card .input{ width:100%; box-sizing:border-box }
+.range-row{ display:flex; gap:8px }
+.range-row input{ flex:1; min-width:0 }
+.problem-type-grid{ flex-wrap:wrap }
+.problem-type-grid > div{ padding:6px }
+.tag-button{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+
+/* Ensure buttons and small controls don't push card width */
+.card, .form-card { overflow:visible }
 
 /* Generic centered page wrapper for forms and content */
 .page-center{ display:flex; align-items:center; justify-content:center; padding:36px 20px; }

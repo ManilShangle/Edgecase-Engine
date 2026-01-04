@@ -7,7 +7,7 @@ const shortid = require('shortid');
 const Guest = require('./models/guest');
 const Problem = require('./models/problem');
 const Testcase = require('./models/testcase');
-const { generateTestcases } = require('./generator');
+const { generateTestcases, canonicalizeTestcase } = require('./generator');
 
 const app = express();
 app.use(cors());
@@ -18,7 +18,7 @@ const MONGO = process.env.MONGO_URI;
 async function start() {
   try {
     await mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
-    console.log('Connected to MongoDB — database:', mongoose.connection.name);
+    console.log('Connected to MongoDB, database:', mongoose.connection.name);
     mongoose.connection.on('error', err => console.error('Mongoose connection error:', err));
     mongoose.connection.on('disconnected', () => console.warn('Mongoose disconnected'));
     const PORT = process.env.PORT || 4000;
@@ -184,8 +184,18 @@ app.post('/api/problems/:id/generate', async (req,res)=>{
 app.post('/api/problems/:id/testcases/bulk', async (req,res)=>{
   try{
     const arr = req.body.testcases || [];
+    // fetch existing canonical keys for this problem
+    const existing = await Testcase.find({ problem_id: req.params.id }).select('canonical_key').exec();
+    const existingKeys = new Set(existing.map(e=>e.canonical_key).filter(Boolean));
     const saved = [];
+    const skipped = [];
     for(const t of arr){
+      // compute canonical key if present in payload or via generator helper
+      const payloadKey = t.canonical_key || (t.content ? (canonicalizeTestcase({ template: t.template || t.template_name || 'generic', content: t.content, params: t.params || {} }) || {}).key : null);
+      if (payloadKey && existingKeys.has(payloadKey)){
+        skipped.push({ reason: 'duplicate', canonical_key: payloadKey, template_name: t.template_name });
+        continue;
+      }
       const doc = new Testcase({
         problem_id: req.params.id,
         owner_type: t.owner_type || 'guest',
@@ -195,12 +205,14 @@ app.post('/api/problems/:id/testcases/bulk', async (req,res)=>{
         targets: t.targets || [],
         template_id: t.template_id || null,
         params: t.params || {},
-        content: t.content || ''
+        content: t.content || '',
+        canonical_key: payloadKey || null
       });
       await doc.save();
       saved.push(doc);
+      if (payloadKey) existingKeys.add(payloadKey);
     }
-    res.json({ saved_count: saved.length, saved });
+    res.json({ saved_count: saved.length, skipped_count: skipped.length, saved, skipped });
   }catch(err){
     console.error(err);
     res.status(500).json({error:'failed to save testcases'});
@@ -277,7 +289,14 @@ app.get('/api/problems/:id/export', async (req,res)=>{
     const includeComments = req.query.comments === 'true';
     let blob = '';
     for(const t of list){
-      if(includeComments) blob += `# ${t.name} | ${t.targets.join(', ')}\n`;
+      if(includeComments){
+        const cat = t.category || '';
+        const tpl = t.name || t.template_name || '';
+        const targets = (t.targets || []).join(', ');
+        const purpose = t.explanation || t.template_explain || '';
+        blob += `${cat} | ${tpl} | targets: ${targets}\n`;
+        blob += `Purpose: ${purpose}\n`;
+      }
       blob += t.content + '\n\n';
     }
     res.setHeader('Content-Type','text/plain');

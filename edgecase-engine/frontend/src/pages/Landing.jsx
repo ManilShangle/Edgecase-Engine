@@ -7,7 +7,7 @@ export default function Landing(){
     <div className="landing-hero">
       <div className="hero-card card">
         <h2>Generate targeted edge-case inputs from problem constraints</h2>
-        <p className="lead">Quickly produce diverse, focused test inputs to help find edge-case failures and assumptions — without running user code.</p>
+        <p className="lead">Quickly produce diverse, focused test inputs to help find edge-case failures and assumptions. The generator does this without running user code.</p>
 
         <div className="hero-cta">
           <button className="primary button" onClick={()=>nav('/create')}>Create a Problem</button>

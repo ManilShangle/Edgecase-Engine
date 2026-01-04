@@ -22,6 +22,8 @@ export default function ProblemDetail(){
     listTestcases(id).then(setTestcases).catch(()=>setTestcases([]))
   }
 
+  
+
   function computeAnalytics(data){
     const byCat = {}
     const targetCounts = {}
@@ -57,7 +59,7 @@ export default function ProblemDetail(){
   }
 
   function renderConstraints(c){
-    if(!c) return '—'
+    if(!c) return 'N/A'
     const parts = []
     if(c.graph){
       const nodes = c.graph.nodes_max || c.graph.nodes || 'N/A'
@@ -71,7 +73,7 @@ export default function ProblemDetail(){
     if(c.allow_duplicates) flags.push('duplicates')
     if(c.sorted_input) flags.push('sorted')
     if(flags.length) parts.push(flags.join(', '))
-    return parts.length ? parts.join(' • ') : '—'
+    return parts.length ? parts.join(' • ') : 'N/A'
   }
 
   async function doExport(){
